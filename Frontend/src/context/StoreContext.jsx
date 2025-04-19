@@ -5,7 +5,7 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
-    const url = "http://localhost:4000";
+    const url = "https://food-del-backend-fsk9.onrender.com";
     const [token, setToken] = useState("");
     const [food_list, setFoodList] = useState([]);
 
@@ -51,37 +51,6 @@ const StoreContextProvider = (props) => {
         }
     };
 
-    // ✅ Add to Cart
-    // const addToCart = async (itemId) => {
-    //     setCartItems((prev) => ({
-    //         ...prev,
-    //         [itemId]: (prev[itemId] || 0) + 1,
-    //     }));
-    //     if (token) {
-    //         await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
-    //     }
-    // };
-
-    // // ✅ Remove from Cart
-    // const removeFromCart = async (itemId) => {
-    //     setCartItems((prev) => {
-    //         if (!prev[itemId]) return prev;
-
-    //         const updatedCart = { ...prev };
-    //         updatedCart[itemId] -= 1;
-
-    //         if (updatedCart[itemId] <= 0) {
-    //             delete updatedCart[itemId];
-    //         }
-
-    //         return { ...updatedCart };
-    //     });
-
-    //     if (token) {
-    //         await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
-    //     }
-    // };
-
     // ✅ Get Total Cart Amount (with guard clause)
     const getTotalCartAmount = () => {
         let totalAmount = 0;
@@ -114,21 +83,6 @@ const StoreContextProvider = (props) => {
             console.error("Failed to fetch food list:", error);
         }
     };
-
-    // const loadCartData = async (token) => {
-    //     try {
-    //         const response = await axios.post(
-    //             url + "/api/cart/get",
-    //             {},
-    //             { headers: { token } }
-    //         );
-    //         console.log("🔥 Cart Data Response:", response.data);
-    //         setCartItems(response.data.CartData || {}); // ✅ Fallback to empty object
-    //         return response.data.CartData || {}; // ✅ Return fetched data
-    //     } catch (error) {
-    //         console.error("Failed to load cart data:", error);
-    //     }
-    // };
 
     const loadCartData = async (token) => {
         try {
@@ -169,19 +123,7 @@ const StoreContextProvider = (props) => {
         loadData();
     }, []);
 
-    // useEffect(() => {
-    //     async function loadData() {
-    //         await fetchFoodList();
-
-    //         const savedToken = localStorage.getItem("token");
-    //         if (savedToken) {
-    //             setToken(savedToken);
-    //             await loadCartData(savedToken); // ✅ Await the state update
-    //             setCartItems((prev) => ({ ...prev })); // ✅ Force state update
-    //         }
-    //     }
-    //     loadData();
-    // }, []);
+   
 
 
     useEffect(() => {
