@@ -5,7 +5,7 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
-    const url = "https://food-del-backend-fsk9.onrender.com";
+    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
     const [token, setToken] = useState("");
     const [food_list, setFoodList] = useState([]);
 
@@ -131,10 +131,21 @@ const StoreContextProvider = (props) => {
     }, [cartItems]); // ✅ React when cartItems changes
 
 
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        if (isDarkMode) {
+            document.body.classList.add("dark-mode");
+        } else {
+            document.body.classList.remove("dark-mode");
+        }
+    }, [isDarkMode]);
+
     // ✅ Context Value
     const contextValue = {
         food_list,
-        setFoodList, // Fix: Correct state setter
+        setFoodList,
         cartItems,
         setCartItems,
         addToCart,
@@ -143,6 +154,10 @@ const StoreContextProvider = (props) => {
         url,
         token,
         setToken,
+        searchQuery,
+        setSearchQuery,
+        isDarkMode,
+        setIsDarkMode
     };
 
     return (

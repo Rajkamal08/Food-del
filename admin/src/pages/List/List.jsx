@@ -8,7 +8,7 @@ const List = ({ url }) => {
 
     const fetchList = async () => {
         const response = await axios.get(`${url}/api/food/list`);
-        // console.log(response.data)
+
         if (response.data.success) {
             setList(response.data.data)
 
@@ -18,7 +18,7 @@ const List = ({ url }) => {
         }
     }
     const removeFood = async (foodId) => {
-        // console.log(foodId)
+
         const response = await axios.post(`${url}/api/food/remove`, { id: foodId });
         await fetchList();
         if (response.data.success) {
