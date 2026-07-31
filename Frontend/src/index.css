@@ -100,9 +100,13 @@ img { max-width: 100%; }
    LAYOUT
    ============================================ */
 .app {
+  width: 100%;
+}
+
+.container {
   width: 90%;
-  max-width: 1280px;
-  margin: auto;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* ============================================

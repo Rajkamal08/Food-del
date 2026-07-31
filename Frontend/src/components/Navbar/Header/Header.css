@@ -1,19 +1,21 @@
+
 /* ============================================
    HERO HEADER
    ============================================ */
 .header {
   position: relative;
-  min-height: 88vh;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 80px 20px 100px;
+  padding: 60px 20px 80px;
   overflow: hidden;
-  border-radius: 0 0 48px 48px;
+  border-radius: 0 0 32px 32px;
   background: var(--gradient-hero);
-  margin: 0 -5.56%; /* bleed beyond .app 90% width */
+  width: 100%;
+  margin-bottom: 48px;
 }
 
 /* Glow orbs */

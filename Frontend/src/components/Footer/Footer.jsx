@@ -13,14 +13,18 @@ const Footer = () => {
 
     return (
         <footer className='footer' id='footer'>
-            <div className='footer__inner'>
+            <div className='footer__inner container'>
                 <div className='footer__top'>
                     {/* Brand */}
                     <div className='footer__brand'>
-                        <img src={assets.logo} alt='FoodDel' className='footer__logo' />
+                        <div className='navbar__brand'>
+                            <span className='navbar__brand-icon'>🍕</span>
+                            <span className='navbar__brand-text' style={{ color: '#fff' }}>
+                                Feast<span className='navbar__brand-highlight'>Flow</span>
+                            </span>
+                        </div>
                         <p className='footer__brand-desc'>
-                            Delivering happiness to your doorstep since 2024. Fresh ingredients,
-                            expert chefs, and lightning-fast delivery — every single time.
+                            Fresh ingredients, expert chefs, and lightning-fast delivery to your doorstep.
                         </p>
                         <div className='footer__socials'>
                             <a href='#' aria-label='Facebook' className='footer__social-btn'>
@@ -37,34 +41,29 @@ const Footer = () => {
 
                     {/* Company */}
                     <div className='footer__col'>
-                        <h4>Company</h4>
+                        <h4>Links</h4>
                         <ul>
                             <li><a href='/'>Home</a></li>
                             <li><a href='#explore-menu'>Menu</a></li>
-                            <li><a href='#'>About Us</a></li>
-                            <li><a href='#'>Careers</a></li>
-                            <li><a href='#'>Privacy Policy</a></li>
+                            <li><a href='/myorders'>Track Orders</a></li>
                         </ul>
                     </div>
 
                     {/* Contact */}
                     <div className='footer__col'>
-                        <h4>Get In Touch</h4>
+                        <h4>Contact</h4>
                         <ul>
+                            <li>✉️ support@feastflow.com</li>
                             <li>📞 +91-7836390903</li>
-                            <li>✉️ support@fooddel.com</li>
-                            <li>📍 Mumbai, India</li>
-                            <li>🕐 24/7 Support</li>
                         </ul>
                     </div>
 
                     {/* Newsletter */}
                     <div className='footer__newsletter'>
-                        <h4>Stay Updated 🍕</h4>
-                        <p>Get exclusive deals and new dish alerts straight to your inbox.</p>
+                        <h4>Newsletter</h4>
                         {subscribed ? (
                             <div className='footer__subscribed'>
-                                ✅ You're subscribed! Welcome aboard.
+                                🎉 Subscribed!
                             </div>
                         ) : (
                             <form className='footer__newsletter-form' onSubmit={handleSubscribe}>
@@ -85,11 +84,10 @@ const Footer = () => {
                 <div className='footer__divider' />
 
                 <div className='footer__bottom'>
-                    <p>© 2024 FoodDel — All Rights Reserved. Made with ❤️ in India.</p>
+                    <p>© 2026 FeastFlow. All Rights Reserved.</p>
                     <div className='footer__bottom-links'>
-                        <a href='#'>Terms</a>
-                        <a href='#'>Privacy</a>
-                        <a href='#'>Cookies</a>
+                        <a href='#'>Privacy Policy</a>
+                        <a href='#'>Terms of Use</a>
                     </div>
                 </div>
             </div>

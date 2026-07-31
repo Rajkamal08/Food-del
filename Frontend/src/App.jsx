@@ -26,16 +26,18 @@ const App = () => {
       <div className='app'>
         <ScrollToTop />
         <Navbar setShowLogin={setShowLogin} />
-        <Routes>
-          <Route path='/'         element={<Home />} />
-          <Route path='/cart'     element={<Cart />} />
-          <Route path='/Cart'     element={<Cart />} />
-          <Route path='/order'    element={<PlaceOrder />} />
-          <Route path='/Order'    element={<PlaceOrder />} />
-          <Route path='/verify'   element={<Verify />} />
-          <Route path='/myorders' element={<MyOrders />} />
-          <Route path='/myOrders' element={<MyOrders />} />
-        </Routes>
+        <div className='container'>
+          <Routes>
+            <Route path='/'         element={<Home />} />
+            <Route path='/cart'     element={<Cart />} />
+            <Route path='/Cart'     element={<Cart />} />
+            <Route path='/order'    element={<PlaceOrder />} />
+            <Route path='/Order'    element={<PlaceOrder />} />
+            <Route path='/verify'   element={<Verify />} />
+            <Route path='/myorders' element={<MyOrders />} />
+            <Route path='/myOrders' element={<MyOrders />} />
+          </Routes>
+        </div>
       </div>
       <Footer />
     </ToastProvider>

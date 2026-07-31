@@ -1,20 +1,18 @@
 .footer {
-  background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+  background: linear-gradient(135deg, #12121e 0%, #08080f 100%);
   color: #a0a0c0;
-  margin-top: 80px;
+  margin-top: 60px;
 }
 .footer__inner {
-  max-width: 1280px;
-  margin: auto;
-  padding: 64px 5% 32px;
+  padding: 40px 0 20px;
 }
 
 /* Top grid */
 .footer__top {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
-  gap: 48px;
-  margin-bottom: 48px;
+  grid-template-columns: 2fr 1fr 1.2fr 1.5fr;
+  gap: 32px;
+  margin-bottom: 32px;
 }
 
 /* Brand */
