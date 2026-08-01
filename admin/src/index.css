@@ -1,29 +1,108 @@
-@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+/* ==========================================================================
+   FEASTFLOW ADMIN PANEL — PREMIUM GLOBAL STYLES & DESIGN TOKENS
+   ========================================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  /* Color Palette */
+  --primary: #ff6b35;          /* FeastFlow Orange */
+  --primary-hover: #e55a2b;
+  --secondary: #2ec4b6;
+  --gradient-brand: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+  --gradient-hover: linear-gradient(135deg, #e55a2b 0%, #ff6b35 100%);
+  --border: #f1f3f5;
+  --border-hover: #e9ecef;
+  --bg: #f8f9fa;               /* Warm white canvas */
+  --bg-secondary: #f1f3f5;
+  --card-bg: #ffffff;
+  
+  /* Text Colors */
+  --text: #1e293b;             /* Deep charcoal */
+  --text-secondary: #64748b;   /* Muted slate */
+  --text-muted: #94a3b8;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.08);
+  
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-input: 10px;
+  --radius-card: 16px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Base resets */
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: Outfit;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
   min-height: 100vh;
-  background-color: #fcfcfc;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
 }
+
 a {
   text-decoration: none;
   color: inherit;
+  transition: var(--transition-fast);
 }
+
 hr {
   border: none;
   height: 1px;
-  background-color: #a9a9a9;
+  background-color: var(--border);
+  margin: 0;
 }
+
+/* Scrollbars styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Content layout wrapper */
 .app-content {
   display: flex;
+  min-height: calc(100vh - 70px);
 }
+
+/* Global utility alignments */
 .flex-col {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

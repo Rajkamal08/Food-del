@@ -1,12 +1,98 @@
+/* ============================================
+   ADMIN NAVBAR — PREMIUM GLASSMORPHIC DESIGN
+   ============================================ */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 4%;
+  padding: 14px 4%;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  height: 70px;
 }
-.navbar .logo {
-  width: max(10%, 80px);
+
+/* Brand logo */
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
 }
-.navbar .profile {
-  width: 40px;
+
+.navbar__brand-icon {
+  background: var(--gradient-brand);
+  color: #ffffff;
+  padding: 6px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__brand-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar__brand-highlight {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar__brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+}
+
+/* Profile avatar */
+.navbar__profile-wrap {
+  position: relative;
+  cursor: pointer;
+}
+
+.navbar__profile-wrap .profile {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+.navbar__profile-wrap:hover .profile {
+  border-color: var(--primary);
+  transform: scale(1.03);
+}
+
+/* Active green indicator dot */
+.navbar__profile-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid var(--card-bg);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
 }

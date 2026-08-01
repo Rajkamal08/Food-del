@@ -1,38 +1,200 @@
+/* ============================================
+   ADMIN ADD DISH FORM — PREMIUM STYLING
+   ============================================ */
 .add {
-  width: 70%;
-  margin-left: max(5vw, 25px);
-  margin-top: 50px;
-  color: #6d6d6d;
-  font-size: 16px;
+  flex: 1;
+  max-width: 680px;
+  padding: 40px 4% 60px;
+  animation: fadeIn 0.5s ease;
 }
-.add form {
+
+.add__header {
+  margin-bottom: 32px;
+}
+
+.add__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.add__title-icon {
+  color: var(--primary);
+}
+.add__header h2 {
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.add__subtitle {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+/* FORM STYLING */
+.add__form {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 }
-.add-img-upload img {
-  width: 120px;
-}
-.add-product-name,
-.add-product-description {
-  width: max(40%, 280px);
-}
-.add-product-name input,
-.add-product-description textarea {
-  padding: 10px;
-}
-.add-category-price {
+
+.add__field {
   display: flex;
-  gap: 30px;
+  flex-direction: column;
+  gap: 6px;
 }
-.add-category-price select,
-.add-category-price input {
-  max-width: 120px;
-  padding: 10px;
+
+.flex-1 {
+  flex: 1;
 }
-.add-btn {
-  max-width: 120px;
-  border: none;
-  padding: 10px;
-  background-color: black;
-  color: white;
+
+.add__row {
+  display: flex;
+  gap: 20px;
+}
+
+.add__label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* INPUTS & TEXTAREA */
+.add__form input[type="text"],
+.add__form input[type="number"],
+.add__form textarea,
+.add__form select {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-input);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text);
+  transition: var(--transition-fast);
+}
+
+.add__form input[type="text"]:focus,
+.add__form input[type="number"]:focus,
+.add__form textarea:focus,
+.add__form select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+}
+
+/* IMAGE UPLOAD ZONE */
+.add__upload-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 140px;
+  border: 2px dashed var(--border-hover);
+  border-radius: var(--radius-card);
+  background: var(--card-bg);
   cursor: pointer;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.add__upload-zone:hover {
+  border-color: var(--primary);
+  background: rgba(255, 107, 53, 0.02);
+}
+
+.upload-placeholder {
+  text-align: center;
+  padding: 20px;
+}
+
+.upload-icon {
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  transition: var(--transition-fast);
+}
+.add__upload-zone:hover .upload-icon {
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.upload-text-main {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+.upload-text-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Image preview modes */
+.upload-preview-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+.upload-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+  transition: var(--transition-fast);
+}
+.upload-preview-wrap:hover .upload-overlay {
+  opacity: 1;
+}
+
+/* SUBMIT BUTTON */
+.add__submit-btn {
+  background: var(--gradient-brand);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-input);
+  padding: 14px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.25);
+  transition: var(--transition-bounce);
+  margin-top: 10px;
+}
+
+.add__submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 107, 53, 0.35);
+}
+
+.add__submit-btn:active {
+  transform: translateY(0);
+}
+
+.add__submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }

@@ -1,27 +1,225 @@
+/* ============================================
+   ADMIN DISH LIST TABLE — PREMIUM STYLING
+   ============================================ */
+.list {
+  flex: 1;
+  padding: 40px 4% 60px;
+  animation: fadeIn 0.5s ease;
+}
+
+.list__header {
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.list__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.list__title-icon {
+  color: var(--primary);
+}
+.list__header h2 {
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.list__subtitle {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.list__count-badge {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  background: rgba(255, 107, 53, 0.08);
+  color: var(--primary);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 107, 53, 0.15);
+}
+
+/* TABLE CONTAINER */
+.list-table {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
 .list-table-format {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr;
+  grid-template-columns: 0.8fr 2fr 1fr 1fr 0.8fr;
   align-items: center;
-  gap: 10px;
-  padding: 12px 15px;
-  border: 1px solid #cacaca;
+  gap: 16px;
+  padding: 14px 20px;
   font-size: 13px;
+  color: var(--text);
 }
+
+/* Header styling */
 .list-table-format.title {
-  background-color: #f9f9f9;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.list-table-format img {
-  width: 50%;
+
+.list-table-rows {
+  display: flex;
+  flex-direction: column;
 }
+
+/* Row styling */
+.list-table-format.row {
+  border-bottom: 1px solid var(--border);
+  transition: var(--transition-fast);
+}
+.list-table-format.row:last-child {
+  border-bottom: none;
+}
+.list-table-format.row:hover {
+  background-color: rgba(0, 0, 0, 0.005);
+}
+
+/* Food Preview thumbnail */
+.list-img-wrap {
+  width: 48px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  background: var(--bg);
+}
+.list-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.list-name {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.list-category {
+  display: inline-block;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.list-price {
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* Action Delete Button */
+.list-action-wrap {
+  display: flex;
+  justify-content: center;
+}
+.list-delete-btn {
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+.list-delete-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+  transform: scale(1.08);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* LOADING SPINNER */
+.list__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border-hover);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.list__empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+.list__empty h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.list__empty p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* RESPONSIVE */
 @media (max-width: 600px) {
   .list-table-format {
-    grid-template-columns: 1fr 2fr 3fr;
-    gap: 15px;
+    grid-template-columns: 1.2fr 2.5fr 1fr;
+    gap: 12px;
   }
   .list-table-format.title {
     display: none;
   }
+  .list-table-format.row .list-category,
+  .list-table-format.row .list-price {
+    display: none;
+  }
 }
-.cursor {
-  cursor: pointer;
+.list__header .list__count-badge {
+  top: auto;
+  bottom: 0;
+}
+@media (min-width: 480px) {
+  .list__header .list__count-badge {
+    top: 4px;
+    bottom: auto;
+  }
 }
