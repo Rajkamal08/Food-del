@@ -32,7 +32,8 @@ const Login = ({ setAdminToken, url }) => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to connect to the server.");
+      const errorMsg = error.response?.data?.message || error.message || "Failed to connect to the server.";
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
