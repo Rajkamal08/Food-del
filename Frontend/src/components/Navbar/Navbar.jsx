@@ -3,6 +3,19 @@ import './Navbar.css';
 import { assets } from '../../assets/assets';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { StoreContext } from '../../context/StoreContext.jsx';
+import { 
+  Sparkles, 
+  MapPin, 
+  ChevronDown, 
+  Search, 
+  Heart, 
+  Bell, 
+  ShoppingBag, 
+  User, 
+  Sun, 
+  Moon, 
+  Gift 
+} from 'lucide-react';
 
 const Navbar = ({ setShowLogin }) => {
     const [scrolled, setScrolled] = useState(false);
@@ -14,7 +27,7 @@ const Navbar = ({ setShowLogin }) => {
     // Total cart item count
     const cartCount = Object.values(cartItems).reduce((a, b) => a + b, 0);
 
-    // Scroll effect for glassmorphism
+    // Scroll effect for glassmorphism and shadow
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
@@ -44,22 +57,44 @@ const Navbar = ({ setShowLogin }) => {
 
     const navLinks = [
         { label: 'Home', to: '/', type: 'link' },
-        { label: 'Dishes Menu', href: '#explore-menu', type: 'anchor' },
-        { label: 'AI Recommender', href: '#food-display', type: 'anchor' },
-        { label: 'Track Orders', to: '/myorders', type: 'link' },
+        { label: 'Dishes', href: '#explore-menu', type: 'anchor' },
+        { label: 'Restaurants', href: '#explore-menu', type: 'anchor' },
+        { label: 'Offers', href: '#explore-menu', type: 'anchor' },
+        { label: 'Track Order', to: '/myorders', type: 'link' },
     ];
 
     return (
         <>
             <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
                 <div className='navbar__container container'>
-                    {/* CSS Brand Logo */}
+                    {/* Brand Logo */}
                     <Link to='/' className='navbar__brand'>
-                        <span className='navbar__brand-icon'>🍕</span>
+                        <span className='navbar__brand-icon'>
+                            <Sparkles size={16} fill="currentColor" />
+                        </span>
                         <span className='navbar__brand-text'>
                             Feast<span className='navbar__brand-highlight'>Flow</span>
                         </span>
                     </Link>
+
+                    {/* Location Selector */}
+                    <div className='navbar__location' title='Select Location'>
+                        <MapPin size={16} className='navbar__location-pin' />
+                        <span className='navbar__location-name'>Bangalore, Koramangala</span>
+                        <ChevronDown size={12} className='navbar__location-arrow' />
+                    </div>
+
+                    {/* Search Bar Input */}
+                    <div className='navbar__search'>
+                        <Search size={16} className='navbar__search-icon' />
+                        <input
+                            type='text'
+                            placeholder='Search dishes...'
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            aria-label='Search food'
+                        />
+                    </div>
 
                     {/* Desktop nav links */}
                     <ul className='navbar__links'>
@@ -92,33 +127,37 @@ const Navbar = ({ setShowLogin }) => {
                         <button
                             className='navbar__icon-btn'
                             onClick={() => setIsDarkMode(!isDarkMode)}
-                            title='Toggle dark mode'
-                            aria-label='Toggle dark mode'
+                            title='Toggle theme'
+                            aria-label='Toggle theme'
                         >
-                            {isDarkMode ? '☀️' : '🌙'}
+                            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
                         </button>
 
-                        {/* Search bar */}
-                        <div className='navbar__search'>
-                            <img src={assets.search_icon} alt='search' className='navbar__search-icon' />
-                            <input
-                                type='text'
-                                placeholder='Search dishes...'
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                aria-label='Search food'
-                            />
-                        </div>
+                        {/* Offers/Gift button */}
+                        <Link to='/' className='navbar__icon-btn' title='Offers'>
+                            <Gift size={18} />
+                        </Link>
+
+                        {/* Notification Bell */}
+                        <button className='navbar__icon-btn navbar__bell-btn' title='Notifications'>
+                            <Bell size={18} />
+                            <span className='navbar__bell-dot' />
+                        </button>
+
+                        {/* Favorites */}
+                        <Link to='/' className='navbar__icon-btn' title='Favorites'>
+                            <Heart size={18} />
+                        </Link>
 
                         {/* Cart */}
                         <Link to='/cart' className='navbar__cart' aria-label='Cart'>
-                            <img src={assets.basket_icon} alt='cart' />
+                            <ShoppingBag size={18} />
                             {cartCount > 0 && (
                                 <span className='navbar__cart-badge'>{cartCount}</span>
                             )}
                         </Link>
 
-                        {/* Auth */}
+                        {/* Auth / Profile */}
                         {!token ? (
                             <button
                                 className='navbar__signin-btn'
@@ -129,7 +168,7 @@ const Navbar = ({ setShowLogin }) => {
                         ) : (
                             <div className='navbar__profile'>
                                 <div className='navbar__profile-trigger'>
-                                    <img src={assets.profile_icon} alt='profile' />
+                                    <User size={18} />
                                 </div>
                                 <ul className='navbar__dropdown'>
                                     <li className='navbar__dropdown-header'>
@@ -138,12 +177,11 @@ const Navbar = ({ setShowLogin }) => {
                                     </li>
                                     <hr />
                                     <li onClick={() => navigate('/myorders')}>
-                                        <img src={assets.bag_icon} alt='' />
+                                        <ShoppingBag size={14} />
                                         <span>My Orders</span>
                                     </li>
                                     <hr />
                                     <li onClick={logout} className='navbar__dropdown-logout'>
-                                        <img src={assets.logout_icon} alt='' />
                                         <span>Logout</span>
                                     </li>
                                 </ul>
@@ -167,7 +205,7 @@ const Navbar = ({ setShowLogin }) => {
                 <div className='navbar__mobile-drawer' onClick={() => setMobileOpen(false)}>
                     <div className='navbar__mobile-menu' onClick={e => e.stopPropagation()}>
                         <div className='navbar__mobile-brand'>
-                            <span className='navbar__brand-icon'>🍕</span>
+                            <Sparkles size={18} className='navbar__brand-icon' />
                             <span className='navbar__brand-text'>Feast<span className='navbar__brand-highlight'>Flow</span></span>
                         </div>
                         {navLinks.map((link) =>

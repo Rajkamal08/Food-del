@@ -1,76 +1,124 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import './Header.css';
+import { StoreContext } from '../../../context/StoreContext.jsx';
+import { Search, MapPin, Sparkles } from 'lucide-react';
 
-const STATS = [
-  { value: '500+', label: 'Dishes', icon: '🍽️' },
-  { value: '30 min', label: 'Avg Delivery', icon: '⚡' },
-  { value: '4.9★', label: 'Rating', icon: '⭐' },
-  { value: '50K+', label: 'Happy Customers', icon: '😊' },
+const POPULAR_TAGS = [
+  { label: '🍕 Pizza', value: 'Pizza' },
+  { label: '🍲 Biryani', value: 'Biryani' },
+  { label: '🍔 Burger', value: 'Burger' },
+  { label: '🍜 Noodles', value: 'Noodles' },
+  { label: '🍰 Cake', value: 'Cake' },
+  { label: '⭐ 4.5+', value: '4.5' }
 ];
 
-const FLOATERS = ['🍕', '🍔', '🌮', '🍜', '🍣', '🧁', '🥗', '🍛'];
-
 const Header = () => {
+  const { searchQuery, setSearchQuery } = useContext(StoreContext);
+
+  const handleTagClick = (val) => {
+    if (val === '4.5') {
+      setSearchQuery('');
+    } else {
+      setSearchQuery(val);
+    }
+    const element = document.getElementById('explore-menu');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const element = document.getElementById('explore-menu');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className='header'>
-      {/* Floating food emojis */}
-      <div className='header__floaters' aria-hidden='true'>
-        {FLOATERS.map((emoji, i) => (
-          <span
-            key={i}
-            className='header__floater'
-            style={{ '--delay': `${i * 0.7}s`, '--x': `${10 + i * 11}%` }}
-          >
-            {emoji}
-          </span>
-        ))}
-      </div>
+      <div className='header__container container'>
+        {/* Left Content */}
+        <div className='header__left'>
+          <div className='header__badge'>
+            <MapPin size={12} className='header__badge-icon' />
+            <span>Bangalore, Koramangala</span>
+          </div>
+          
+          <h1 className='header__title'>
+            Good Food.<br />
+            <span className='header__title-highlight'>Delivered Fast.</span>
+          </h1>
 
-      {/* Glow orbs */}
-      <div className='header__orb header__orb--1' aria-hidden='true' />
-      <div className='header__orb header__orb--2' aria-hidden='true' />
+          <p className='header__subtitle'>
+            Order from top restaurants near you and get it in 30 minutes.
+          </p>
 
-      {/* Content */}
-      <div className='header__content'>
-        <div className='header__badge'>🔥 India&apos;s #1 Food Delivery</div>
-
-        <h1 className='header__title'>
-          Craving Something
-          <span className='header__title-highlight'> Delicious?</span>
-        </h1>
-
-        <p className='header__subtitle'>
-          From spicy street food to gourmet meals — choose from 500+ dishes
-          crafted by top chefs, delivered hot to your door in under 30 minutes.
-        </p>
-
-        <div className='header__actions'>
-          <a href='#explore-menu' className='header__btn header__btn--primary'>
-            🍴 Explore Menu
-          </a>
-          <a href='#food-display' className='header__btn header__btn--ghost'>
-            Top Picks →
-          </a>
-        </div>
-
-        {/* Stats */}
-        <div className='header__stats'>
-          {STATS.map((stat) => (
-            <div key={stat.label} className='header__stat'>
-              <span className='header__stat-icon'>{stat.icon}</span>
-              <span className='header__stat-value'>{stat.value}</span>
-              <span className='header__stat-label'>{stat.label}</span>
+          {/* Search Pill */}
+          <form className='header__search-form' onSubmit={handleSearchSubmit}>
+            <div className='header__search-input-wrap'>
+              <Search size={18} className='header__search-icon-inside' />
+              <input
+                type='text'
+                placeholder='Search for dishes, cuisines, restaurants...'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label='Search food'
+              />
+              <button type='submit' className='header__search-btn'>
+                Search
+              </button>
             </div>
-          ))}
-        </div>
-      </div>
+          </form>
 
-      {/* Scroll indicator */}
-      <div className='header__scroll-indicator' aria-hidden='true'>
-        <div className='header__scroll-mouse'>
-          <div className='header__scroll-dot' />
+          {/* Popular Tags */}
+          <div className='header__tags-row'>
+            {POPULAR_TAGS.map((tag) => (
+              <button
+                key={tag.label}
+                className='header__tag'
+                onClick={() => handleTagClick(tag.value)}
+              >
+                {tag.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <span>Scroll down</span>
+
+        {/* Right Composition Graphics */}
+        <div className='header__right'>
+          <div className='header__graphics-wrap'>
+            {/* Top Right Dish */}
+            <div className='header__dish header__dish--top'>
+              <img 
+                src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop' 
+                alt='Salad bowl' 
+              />
+            </div>
+
+            {/* Main Center Burger Dish */}
+            <div className='header__dish header__dish--center'>
+              <img 
+                src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&h=500&fit=crop' 
+                alt='Burger plate' 
+              />
+              {/* Delivery Time Badge */}
+              <div className='header__time-badge'>
+                <span className='header__time-title'>Delivered in</span>
+                <span className='header__time-value'>30 mins</span>
+                <Sparkles size={14} className='header__time-sparkle' fill="currentColor" />
+              </div>
+            </div>
+
+            {/* Bottom Right Soup Dish */}
+            <div className='header__dish header__dish--bottom'>
+              <img 
+                src='https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=400&fit=crop' 
+                alt='Noodle soup' 
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,121 +1,160 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './FoodItem.css';
 import { assets } from '../../../assets/assets';
 import { StoreContext } from '../../../context/StoreContext.jsx';
 import { useToast } from '../../Toast/Toast.jsx';
+import { Heart, Plus, Minus, Flame, Star } from 'lucide-react';
 
-// Deterministic badge assignment based on item name
-const getBadge = (name, index) => {
-    const badges = ['BESTSELLER', 'POPULAR', 'CHEF\'S PICK', 'NEW', null, null];
-    const hash = name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    return badges[hash % badges.length];
-};
-
-// Meal time tags based on category
-const getMealTag = (category) => {
-    const map = {
-        Salad: '🥗 Healthy',
-        Rolls: '🌯 Snack',
-        Deserts: '🍰 Dessert',
-        Sandwich: '🥪 Lunch',
-        Cake: '🎂 Special',
-        'Pure Veg': '🌿 Vegan',
-        Pasta: '🍝 Dinner',
-        Noodles: '🍜 Dinner',
-    };
-    return map[category] || '🍽️ Meal';
-};
-
-// Veg categories
 const VEG_CATEGORIES = ['Salad', 'Deserts', 'Cake', 'Pure Veg'];
-
-const StarRating = ({ rating = 4.5 }) => {
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5;
-    return (
-        <div className='food-item__stars' aria-label={`Rating: ${rating}`}>
-            {'★'.repeat(full)}{half ? '½' : ''}{'☆'.repeat(5 - full - (half ? 1 : 0))}
-            <span>{rating}</span>
-        </div>
-    );
-};
 
 const FoodItem = ({ id, name, price, description, image, category }) => {
     const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
     const showToast = useToast();
     const [adding, setAdding] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
 
-    const badge = getBadge(name, id);
-    const mealTag = getMealTag(category);
-    const isVeg = VEG_CATEGORIES.includes(category);
     const count = cartItems[id] || 0;
+    const isVeg = VEG_CATEGORIES.includes(category);
 
-    // Deterministic rating per item
+    // Load favorite state from localStorage
+    useEffect(() => {
+        const favs = JSON.parse(localStorage.getItem('favorites') || '{}');
+        setIsFavorite(!!favs[id]);
+    }, [id]);
+
+    const toggleFavorite = (e) => {
+        e.stopPropagation();
+        const favs = JSON.parse(localStorage.getItem('favorites') || '{}');
+        const nextState = !isFavorite;
+        if (nextState) {
+            favs[id] = true;
+            showToast(`${name} added to favorites!`, 'info');
+        } else {
+            delete favs[id];
+            showToast(`${name} removed from favorites.`, 'info');
+        }
+        localStorage.setItem('favorites', JSON.stringify(favs));
+        setIsFavorite(nextState);
+    };
+
+    // Deterministic rating (e.g., 4.2 to 4.9)
     const hash = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-    const rating = (3.8 + (hash % 12) * 0.1).toFixed(1);
+    const rating = (4.1 + (hash % 9) * 0.1).toFixed(1);
+
+    // Deterministic calories (e.g., 180 to 450 kcal)
+    const calories = 180 + (hash % 28) * 10;
+
+    // Deterministic discount calculations (e.g., 20% off)
+    const discountPercent = 10 + (hash % 4) * 5; // 10%, 15%, 20%, 25%
+    const originalPrice = Math.round(price * (1 + discountPercent / 100));
+
+    // Spicy level check based on name
+    const lowercaseName = name.toLowerCase();
+    const isSpicy = lowercaseName.includes('spicy') || 
+                    lowercaseName.includes('chili') || 
+                    lowercaseName.includes('peri') || 
+                    lowercaseName.includes('noodles') || 
+                    lowercaseName.includes('pasta');
 
     const imgSrc = image && image.startsWith('http')
         ? image
         : `${url}/images/${image}`;
 
-    const handleAdd = async () => {
+    const handleAdd = async (e) => {
+        e.stopPropagation();
         setAdding(true);
         await addToCart(id);
         showToast(`${name} added to cart!`, 'success');
         setTimeout(() => setAdding(false), 400);
     };
 
+    const handleRemove = (e) => {
+        e.stopPropagation();
+        removeFromCart(id);
+    };
+
     return (
         <div className='food-item'>
-            {/* Image */}
+            {/* Image Wrap */}
             <div className='food-item__img-wrap'>
                 <img className='food-item__img' src={imgSrc} alt={name} loading='lazy' />
 
-                {/* Badges */}
+                {/* Offer tag */}
+                <div className='food-item__offer-badge'>
+                    {discountPercent}% OFF
+                </div>
+
+                {/* Favorite Icon */}
+                <button 
+                    className={`food-item__fav-btn ${isFavorite ? 'active' : ''}`} 
+                    onClick={toggleFavorite}
+                    aria-label='Toggle favorite'
+                >
+                    <Heart size={16} fill={isFavorite ? 'currentColor' : 'none'} />
+                </button>
+
+                {/* Veg/Non-Veg overlay */}
                 <div className='food-item__badges'>
-                    {badge && <span className='food-item__badge'>{badge}</span>}
-                    <span className={`food-item__veg-dot ${isVeg ? 'veg' : 'non-veg'}`} title={isVeg ? 'Veg' : 'Non-veg'} />
+                    <span 
+                        className={`food-item__veg-badge ${isVeg ? 'veg' : 'non-veg'}`}
+                        title={isVeg ? 'Veg' : 'Non-veg'}
+                    >
+                        <span className='dot' />
+                    </span>
                 </div>
 
-                {/* Meal tag */}
-                <span className='food-item__meal-tag'>{mealTag}</span>
-
-                {/* Cart controls */}
-                <div className='food-item__cart-ctrl'>
-                    {count === 0 ? (
-                        <button
-                            className={`food-item__add-btn ${adding ? 'adding' : ''}`}
-                            onClick={handleAdd}
-                            aria-label={`Add ${name} to cart`}
-                        >
-                            <img src={assets.add_icon_white} alt='add' />
-                        </button>
-                    ) : (
-                        <div className='food-item__counter'>
-                            <button onClick={() => removeFromCart(id)} aria-label='Remove one'>
-                                <img src={assets.remove_icon_red} alt='remove' />
-                            </button>
-                            <span>{count}</span>
-                            <button onClick={handleAdd} aria-label='Add one'>
-                                <img src={assets.add_icon_green} alt='add' />
-                            </button>
-                        </div>
-                    )}
-                </div>
+                {/* Estimated Delivery Tag */}
+                <span className='food-item__del-time'>30 mins</span>
             </div>
 
-            {/* Info */}
+            {/* Content Info */}
             <div className='food-item__info'>
-                <div className='food-item__name-row'>
-                    <h3 className='food-item__name'>{name}</h3>
-                    <StarRating rating={parseFloat(rating)} />
-                </div>
-                <p className='food-item__desc'>{description}</p>
-                <div className='food-item__footer'>
-                    <span className='food-item__price'>₹{price}</span>
-                    {count > 0 && (
-                        <span className='food-item__in-cart'>{count} in cart</span>
+                <div className='food-item__meta-row'>
+                    <div className='food-item__rating-wrap'>
+                        <Star size={12} className='star-icon' fill="currentColor" />
+                        <span>{rating}</span>
+                    </div>
+                    {isSpicy && (
+                        <div className='food-item__spicy-tag'>
+                            <Flame size={12} />
+                            <span>Spicy</span>
+                        </div>
                     )}
+                    <span className='food-item__kcal'>{calories} kcal</span>
+                </div>
+
+                <h3 className='food-item__name'>{name}</h3>
+                <p className='food-item__desc'>{description}</p>
+
+                <div className='food-item__footer'>
+                    <div className='food-item__price-group'>
+                        <span className='food-item__price'>₹{price}</span>
+                        <span className='food-item__original-price'>₹{originalPrice}</span>
+                    </div>
+
+                    {/* Quantity selectors */}
+                    <div className='food-item__cart-ctrl'>
+                        {count === 0 ? (
+                            <button
+                                className={`food-item__add-btn ${adding ? 'adding' : ''}`}
+                                onClick={handleAdd}
+                                aria-label={`Add ${name} to cart`}
+                            >
+                                <Plus size={14} />
+                                <span>Add</span>
+                            </button>
+                        ) : (
+                            <div className='food-item__counter'>
+                                <button onClick={handleRemove} className='food-item__counter-btn' aria-label='Remove one'>
+                                    <Minus size={13} />
+                                </button>
+                                <span className='food-item__counter-val'>{count}</span>
+                                <button onClick={handleAdd} className='food-item__counter-btn' aria-label='Add one'>
+                                    <Plus size={13} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

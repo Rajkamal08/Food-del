@@ -1,54 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
 /* ============================================
    DESIGN TOKENS
    ============================================ */
 :root {
   /* Brand Colors */
-  --primary: #ff6b35;
-  --primary-dark: #e8551f;
-  --primary-light: #ff8c5a;
-  --primary-glow: rgba(255, 107, 53, 0.25);
-  --accent: #ffd166;
-
-  /* Backgrounds */
-  --bg: #fafafa;
-  --bg-secondary: #f3f4f6;
-  --card-bg: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.45);
-
-  /* Text */
-  --text: #1a1a2e;
-  --text-secondary: #555577;
-  --text-muted: #9ca3af;
-
-  /* Borders */
-  --border: #e5e7eb;
-  --border-focus: rgba(255, 107, 53, 0.5);
+  --primary: #ff6b35;           /* Warm Orange */
+  --primary-hover: #e8551f;     /* Deep Orange */
+  --secondary: #3d1c02;         /* Deep Brown */
+  
+  /* Backgrounds & Text */
+  --bg: #f9f9fb;                /* Very light warm gray */
+  --bg-secondary: #f0f0f2;
+  --card-bg: #ffffff;           /* Pure white */
+  --text: #222222;              /* Dark charcoal */
+  --text-secondary: #5f6368;    /* Muted gray text */
+  --text-muted: #8d9299;
+  
+  /* Borders & Focus */
+  --border: #ececed;            /* Clean light gray */
+  --border-hover: rgba(255, 107, 53, 0.15);
+  --border-focus: rgba(255, 107, 53, 0.4);
 
   /* Shadows */
-  --shadow-xs: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-sm: 0 4px 12px rgba(0,0,0,0.07);
-  --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
-  --shadow-lg: 0 20px 48px rgba(0,0,0,0.13);
-  --shadow-glow: 0 8px 30px rgba(255, 107, 53, 0.35);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.02);
+  --shadow-glow: 0 8px 24px rgba(255, 107, 53, 0.25);
 
   /* Gradients */
   --gradient-brand: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  --gradient-hero: linear-gradient(145deg, #1c0a00 0%, #3d1400 40%, #7a2800 100%);
-  --gradient-card: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+  --gradient-hero: linear-gradient(145deg, #110e0c 0%, #201712 50%, #302117 100%);
+  --gradient-card: linear-gradient(145deg, #ffffff 0%, #fafafb 100%);
 
   /* Transitions */
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   --transition-fast: all 0.15s ease;
   --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Spacing */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* Spacing Grid & Border Radii */
+  --space-unit: 8px;
+  --radius-card: 20px;
+  --radius-btn: 14px;
+  --radius-input: 14px;
+  --radius-img: 16px;
   --radius-full: 9999px;
 }
 
@@ -56,19 +51,18 @@
    DARK MODE
    ============================================ */
 .dark-mode {
-  --bg: #0f0f1a;
-  --bg-secondary: #1a1a2e;
-  --card-bg: #1e1e30;
-  --glass-bg: rgba(30, 30, 48, 0.80);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --text: #f0f0ff;
-  --text-secondary: #a0a0c0;
-  --text-muted: #606080;
-  --border: #2a2a40;
-  --shadow-sm: 0 4px 12px rgba(0,0,0,0.3);
-  --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
-  --shadow-lg: 0 20px 48px rgba(0,0,0,0.5);
-  --gradient-card: linear-gradient(145deg, #1e1e30 0%, #181828 100%);
+  --bg: #0b0a0a;
+  --bg-secondary: #141212;
+  --card-bg: #1c1817;
+  --text: #f3f3f5;
+  --text-secondary: #a09e9e;
+  --text-muted: #6e6b6a;
+  --border: #2c2725;
+  --border-hover: rgba(255, 107, 53, 0.25);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.2);
+  --gradient-card: linear-gradient(145deg, #1c1817 0%, #151211 100%);
 }
 
 /* ============================================
