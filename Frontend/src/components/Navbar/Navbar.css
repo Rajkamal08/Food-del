@@ -310,7 +310,8 @@
   animation: slideDown 0.2s ease;
   z-index: 100;
 }
-.navbar__profile:hover .navbar__dropdown {
+.navbar__profile:hover .navbar__dropdown,
+.navbar__dropdown.navbar__dropdown--show {
   display: block;
 }
 

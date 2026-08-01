@@ -1,13 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import './Navbar.css';
 import { assets } from '../../assets/assets';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { StoreContext } from '../../context/StoreContext.jsx';
+import { useToast } from '../Toast/Toast.jsx';
 import { 
   Sparkles, 
   MapPin, 
   ChevronDown, 
-  Search, 
   Heart, 
   Bell, 
   ShoppingBag, 
@@ -20,9 +20,13 @@ import {
 const Navbar = ({ setShowLogin }) => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef(null);
+
     const { token, setToken, searchQuery, setSearchQuery, isDarkMode, setIsDarkMode, cartItems } = useContext(StoreContext);
     const navigate = useNavigate();
     const location = useLocation();
+    const showToast = useToast();
 
     // Total cart item count
     const cartCount = Object.values(cartItems).reduce((a, b) => a + b, 0);
@@ -34,32 +38,86 @@ const Navbar = ({ setShowLogin }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close mobile menu on route change
-    useEffect(() => { setMobileOpen(false); }, [location]);
+    // Close mobile menu and dropdown on route change
+    useEffect(() => { 
+        setMobileOpen(false); 
+        setShowDropdown(false);
+    }, [location]);
+
+    // Close dropdown on click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('cartItems');
         setToken('');
+        setShowDropdown(false);
+        showToast("Logged out successfully.", "info");
         navigate('/');
     };
 
-    const handleAnchorClick = (e, href) => {
-        if (location.pathname !== '/') {
+    const handleHomeClick = (e) => {
+        if (location.pathname === '/') {
             e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const handleAnchorClick = (e, href) => {
+        e.preventDefault();
+        const targetId = href.startsWith('#') ? href.slice(1) : href;
+        
+        if (location.pathname === '/') {
+            const element = document.getElementById(targetId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else {
             navigate('/');
             setTimeout(() => {
-                const element = document.querySelector(href);
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 150);
+        }
+    };
+
+    const handleOffersClick = (e) => {
+        e.preventDefault();
+        showToast("🎉 Check out our best promo offers below!", "success");
+        handleAnchorClick(e, '#explore-menu');
+    };
+
+    const handleNotificationsClick = () => {
+        showToast("🔔 You're all caught up! No new notifications.", "info");
+    };
+
+    const handleFavoritesClick = (e) => {
+        e.preventDefault();
+        const favs = JSON.parse(localStorage.getItem('favorites') || '{}');
+        const count = Object.keys(favs).length;
+        if (count === 0) {
+            showToast("You haven't added any favorites yet! Click the heart icon on any food item.", "info");
+        } else {
+            showToast(`💖 You have ${count} favorite dish${count === 1 ? '' : 'es'}! Look for the red hearts on the menu.`, "success");
+            handleAnchorClick(e, '#explore-menu');
         }
     };
 
     const navLinks = [
-        { label: 'Home', to: '/', type: 'link' },
-        { label: 'Dishes', href: '#explore-menu', type: 'anchor' },
-        { label: 'Restaurants', href: '#explore-menu', type: 'anchor' },
-        { label: 'Offers', href: '#explore-menu', type: 'anchor' },
+        { label: 'Home', to: '/', type: 'link', onClick: handleHomeClick },
+        { label: 'Dishes', href: '#explore-menu', type: 'anchor', onClick: (e) => handleAnchorClick(e, '#explore-menu') },
+        { label: 'Restaurants', href: '#explore-menu', type: 'anchor', onClick: (e) => handleAnchorClick(e, '#explore-menu') },
+        { label: 'Offers', href: '#explore-menu', type: 'anchor', onClick: handleOffersClick },
         { label: 'Track Order', to: '/myorders', type: 'link' },
     ];
 
@@ -68,7 +126,7 @@ const Navbar = ({ setShowLogin }) => {
             <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
                 <div className='navbar__container container'>
                     {/* Brand Logo */}
-                    <Link to='/' className='navbar__brand'>
+                    <Link to='/' className='navbar__brand' onClick={handleHomeClick}>
                         <span className='navbar__brand-icon'>
                             <Sparkles size={16} fill="currentColor" />
                         </span>
@@ -78,13 +136,11 @@ const Navbar = ({ setShowLogin }) => {
                     </Link>
 
                     {/* Location Selector */}
-                    <div className='navbar__location' title='Select Location'>
+                    <div className='navbar__location' title='Select Location' onClick={() => showToast("📍 Deliveries configured for Bangalore, Koramangala area.", "info")}>
                         <MapPin size={16} className='navbar__location-pin' />
                         <span className='navbar__location-name'>Bangalore, Koramangala</span>
                         <ChevronDown size={12} className='navbar__location-arrow' />
                     </div>
-
-
 
                     {/* Desktop nav links */}
                     <ul className='navbar__links'>
@@ -94,6 +150,7 @@ const Navbar = ({ setShowLogin }) => {
                                     <Link
                                         to={link.to}
                                         className={location.pathname === link.to ? 'active' : ''}
+                                        onClick={link.onClick}
                                     >
                                         {link.label}
                                     </Link>
@@ -102,7 +159,7 @@ const Navbar = ({ setShowLogin }) => {
                                 <li key={link.label}>
                                     <a 
                                         href={link.href}
-                                        onClick={(e) => handleAnchorClick(e, link.href)}
+                                        onClick={link.onClick}
                                     >
                                         {link.label}
                                     </a>
@@ -116,7 +173,10 @@ const Navbar = ({ setShowLogin }) => {
                         {/* Dark mode toggle */}
                         <button
                             className='navbar__icon-btn'
-                            onClick={() => setIsDarkMode(!isDarkMode)}
+                            onClick={() => {
+                                setIsDarkMode(!isDarkMode);
+                                showToast(`🌙 Theme switched to ${!isDarkMode ? 'Dark' : 'Light'} Mode.`, "info");
+                            }}
                             title='Toggle theme'
                             aria-label='Toggle theme'
                         >
@@ -124,20 +184,34 @@ const Navbar = ({ setShowLogin }) => {
                         </button>
 
                         {/* Offers/Gift button */}
-                        <Link to='/' className='navbar__icon-btn' title='Offers'>
+                        <button 
+                            className='navbar__icon-btn' 
+                            title='Offers' 
+                            onClick={handleOffersClick}
+                            style={{ border: 'none', cursor: 'pointer' }}
+                        >
                             <Gift size={18} />
-                        </Link>
+                        </button>
 
                         {/* Notification Bell */}
-                        <button className='navbar__icon-btn navbar__bell-btn' title='Notifications'>
+                        <button 
+                            className='navbar__icon-btn navbar__bell-btn' 
+                            title='Notifications' 
+                            onClick={handleNotificationsClick}
+                        >
                             <Bell size={18} />
                             <span className='navbar__bell-dot' />
                         </button>
 
                         {/* Favorites */}
-                        <Link to='/' className='navbar__icon-btn' title='Favorites'>
+                        <button 
+                            className='navbar__icon-btn' 
+                            title='Favorites' 
+                            onClick={handleFavoritesClick}
+                            style={{ border: 'none', cursor: 'pointer' }}
+                        >
                             <Heart size={18} />
-                        </Link>
+                        </button>
 
                         {/* Cart */}
                         <Link to='/cart' className='navbar__cart' aria-label='Cart'>
@@ -156,17 +230,22 @@ const Navbar = ({ setShowLogin }) => {
                                 Sign In
                             </button>
                         ) : (
-                            <div className='navbar__profile'>
-                                <div className='navbar__profile-trigger'>
+                            <div className='navbar__profile' ref={dropdownRef}>
+                                <button 
+                                    className='navbar__profile-trigger' 
+                                    onClick={() => setShowDropdown(!showDropdown)}
+                                    aria-label='User Profile'
+                                    style={{ border: 'none', cursor: 'pointer' }}
+                                >
                                     <User size={18} />
-                                </div>
-                                <ul className='navbar__dropdown'>
+                                </button>
+                                <ul className={`navbar__dropdown ${showDropdown ? 'navbar__dropdown--show' : ''}`}>
                                     <li className='navbar__dropdown-header'>
                                         <p className='navbar__dropdown-title'>Welcome Back!</p>
                                         <p className='navbar__dropdown-subtitle'>Happy Dining</p>
                                     </li>
                                     <hr />
-                                    <li onClick={() => navigate('/myorders')}>
+                                    <li onClick={() => { navigate('/myorders'); setShowDropdown(false); }}>
                                         <ShoppingBag size={14} />
                                         <span>My Orders</span>
                                     </li>
@@ -200,7 +279,10 @@ const Navbar = ({ setShowLogin }) => {
                         </div>
                         {navLinks.map((link) =>
                             link.type === 'link' ? (
-                                <Link key={link.label} to={link.to} onClick={() => setMobileOpen(false)}>
+                                <Link key={link.label} to={link.to} onClick={(e) => {
+                                    if (link.onClick) link.onClick(e);
+                                    setMobileOpen(false);
+                                }}>
                                     {link.label}
                                 </Link>
                             ) : (
@@ -208,7 +290,7 @@ const Navbar = ({ setShowLogin }) => {
                                     key={link.label} 
                                     href={link.href} 
                                     onClick={(e) => {
-                                        handleAnchorClick(e, link.href);
+                                        if (link.onClick) link.onClick(e);
                                         setMobileOpen(false);
                                     }}
                                 >
