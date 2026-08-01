@@ -11,7 +11,7 @@ const Add = ({ url, adminToken }) => {
         name: "",
         description: "",
         price: "",
-        category: "Salad"
+        category: "Street Food"
     });
     const [uploading, setUploading] = useState(false);
 
@@ -48,7 +48,7 @@ const Add = ({ url, adminToken }) => {
                     name: "",
                     description: "",
                     price: "",
-                    category: "Salad"
+                    category: "Street Food"
                 });
                 setImage(null);
                 toast.success(response.data.message);
@@ -139,14 +139,14 @@ const Add = ({ url, adminToken }) => {
                         <p className='add__label'>Menu Category</p>
                         <div className='select-wrapper'>
                             <select onChange={onChangeHandler} name="category" value={data.category} required>
-                                <option value="Salad">Salad</option>
+                                <option value="Street Food">Street Food</option>
+                                <option value="Indian Sweets">Indian Sweets</option>
+                                <option value="Non-Veg">Non-Veg</option>
+                                <option value="Biryani">Biryani</option>
+                                <option value="Tandoori">Tandoori</option>
+                                <option value="Curries">Curries</option>
                                 <option value="Rolls">Rolls</option>
-                                <option value="Deserts">Deserts</option>
-                                <option value="Sandwich">Sandwich</option>
-                                <option value="Cake">Cake</option>
-                                <option value="Pure Veg">Pure Veg</option>
-                                <option value="Pasta">Pasta</option>
-                                <option value="Noodles">Noodles</option>
+                                <option value="Drinks">Drinks</option>
                             </select>
                         </div>
                     </div>
