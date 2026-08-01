@@ -104,16 +104,40 @@ const StoreContextProvider = (props) => {
             "photo-1563729784474-d77dbb933a9e", "photo-1588195538326-c5b1e9f80a1b", 
             "photo-1612203987029-7f72421773f3", "photo-1600891964599-f61ba0e24092", 
             "photo-1598214886806-c87b84b7078b", "photo-1550617931-e17a7b70dce2", 
-            "photo-1579372786545-d24232daf58c", "photo-1586528116311-ad8dd3c8310d"
+            "photo-1579372786545-d24232daf58c", "photo-1586528116311-ad8dd3c8310d",
+            "photo-1569058242253-92a9c755a0ec", "photo-1504118543353-0195b4c0b3e5", 
+            "photo-1504387828074-da7966a95474", "photo-1525351484163-7529414344d8", 
+            "photo-1547496502-affa22d38842", "photo-1550258987-190a2d41a8ba", 
+            "photo-1558961303-1f666c8665c1", "photo-1559183130-815174e56f66", 
+            "photo-1560180474-e8563fd75bab", "photo-1560806887-1e4cd0b6cbd6", 
+            "photo-1564759996738-80f4a88f49a7", "photo-1565299585323-38d6b0865b47", 
+            "photo-1567620832903-9fc6debc209f", "photo-1576618148400-f54bed99fcfd", 
+            "photo-1582196016295-f8c894d3e5db", "photo-1585934580926-1d1101f07b71", 
+            "photo-1588166524941-3bf61a9c41db", "photo-1590947132387-155cc02f3212", 
+            "photo-1593560708920-61dd98c46a4e", "photo-1598515214211-89d3c73ae83b", 
+            "photo-1598946754002-443b7156942c", "photo-1600271886742-f049cd451bba", 
+            "photo-1600891964092-4316c288032e", "photo-1603048588665-791ca8aea617", 
+            "photo-1604152135912-04a022e23696", "photo-1604908176997-125f25cc6f3d", 
+            "photo-1605493724144-185458652348", "photo-1607349913338-fca6f7fc42d0", 
+            "photo-1610614819513-58e34989848b", "photo-1611143669185-af224c5e3252", 
+            "photo-1615485290382-441e4d049cb5", "photo-1616641869312-ffd2a3b934f0", 
+            "photo-1617347454431-f49d7ff5c3b1", "photo-1618219942942-555121b63660", 
+            "photo-1618414503936-0546d2a1c22d", "photo-1621510456681-23a23cfb5f57", 
+            "photo-1621961476414-e6c7348981f2", "photo-1623689046288-c70a88b508f7", 
+            "photo-1625244724120-1fd1d34d00f6", "photo-1626804475297-400050e55b4e", 
+            "photo-1627308595229-7830a5c91f9f", "photo-1628294895522-636c345f7785", 
+            "photo-1631709497146-a239efc74a1a", "photo-1632778149955-e80f8ceca2e8", 
+            "photo-1645112411341-6c4fd023714a", "photo-1647089069507-6799042b58ea"
         ];
         try {
             const response = await axios.get(url + "/api/food/list");
             const mappedData = response.data.data.map((item, index) => {
                 const photoId = premiumFoodPhotos[index % premiumFoodPhotos.length];
+                const cleanId = item._id || item.id;
                 return {
                     ...item,
                     image: `https://images.unsplash.com/${photoId}?w=600&auto=format&fit=crop&q=80`,
-                    id: item.id || item._id || `${item.name}-${index}` || index,
+                    id: cleanId,
                 };
             });
 
@@ -133,29 +157,29 @@ const StoreContextProvider = (props) => {
 
             console.log("🔥 Cart Data Response:", response.data);
 
-            const fetchedCart = response.data.cartData || {}; // ✅ Default to empty object
+            const fetchedCart = response.data.cartData || {}; // Default to empty object
             setCartItems(fetchedCart);
 
-            // ✅ Store in localStorage for persistence
+            // Store in localStorage for persistence
             localStorage.setItem("cartItems", JSON.stringify(fetchedCart));
 
         } catch (error) {
             console.error("Failed to load cart data:", error);
         }
     };
+
     useEffect(() => {
         async function loadData() {
             await fetchFoodList();
 
+            // Always load cart from localStorage first (works for guests & logged in)
+            const savedCart = JSON.parse(localStorage.getItem("cartItems")) || {};
+            setCartItems(savedCart);
+
             const savedToken = localStorage.getItem("token");
             if (savedToken) {
                 setToken(savedToken);
-
-                // ✅ First, check localStorage for cart data
-                const savedCart = JSON.parse(localStorage.getItem("cartItems")) || {};
-                setCartItems(savedCart);
-
-                // ✅ Then, fetch from backend to ensure latest data
+                // Then fetch from backend to sync latest data
                 await loadCartData(savedToken);
             }
         }
