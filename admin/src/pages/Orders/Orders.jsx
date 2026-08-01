@@ -12,14 +12,16 @@ import {
   ChevronRight 
 } from 'lucide-react';
 
-const Orders = ({ url }) => {
+const Orders = ({ url, adminToken }) => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchAllOrders = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(url + "/api/order/list");
+            const response = await axios.get(url + "/api/order/list", {
+                headers: { token: adminToken }
+            });
             if (response.data.success) {
                 setOrders(response.data.data);
             } else {
@@ -39,6 +41,8 @@ const Orders = ({ url }) => {
             const response = await axios.post(url + "/api/order/status", {
                 orderId,
                 status: newStatus
+            }, {
+                headers: { token: adminToken }
             });
 
             if (response.data.success) {

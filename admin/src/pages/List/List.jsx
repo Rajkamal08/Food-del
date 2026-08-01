@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Trash2, Sparkles } from 'lucide-react';
 
-const List = ({ url }) => {
+const List = ({ url, adminToken }) => {
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -28,7 +28,9 @@ const List = ({ url }) => {
     const removeFood = async (foodId, foodName) => {
         if (!window.confirm(`Are you sure you want to delete "${foodName}"?`)) return;
         try {
-            const response = await axios.post(`${url}/api/food/remove`, { id: foodId });
+            const response = await axios.post(`${url}/api/food/remove`, { id: foodId }, {
+                headers: { token: adminToken }
+            });
             if (response.data.success) {
                 toast.success(response.data.message || `${foodName} deleted successfully!`);
                 await fetchList();

@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { UploadCloud, Sparkles } from 'lucide-react';
 
-const Add = ({ url }) => {
+const Add = ({ url, adminToken }) => {
     const [image, setImage] = useState(null);
     const [data, setData] = useState({
         name: "",
@@ -37,7 +37,10 @@ const Add = ({ url }) => {
 
         try {
             const response = await axios.post(`${url}/api/food/add`, formData, {
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { 
+                  "Content-Type": "multipart/form-data",
+                  "token": adminToken
+                }
             });
 
             if (response.data.success) {
