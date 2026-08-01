@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /placeorder
+Disallow: /myorders
+
+Sitemap: https://food-del-frontend-a4t3.onrender.com/sitemap.xml
