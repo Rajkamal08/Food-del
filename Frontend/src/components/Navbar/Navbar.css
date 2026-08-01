@@ -151,6 +151,7 @@
   position: relative;
   padding: 6px 0;
   transition: var(--transition-fast);
+  white-space: nowrap;
 }
 
 .navbar__links li a::after {
