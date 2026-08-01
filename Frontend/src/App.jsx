@@ -9,6 +9,7 @@ import LoginPopup from './components/LoginPopup/LoginPopup';
 import Verify from './pages/Verify/Verify';
 import MyOrders from './pages/MyOrders/MyOrders';
 import { ToastProvider } from './components/Toast/Toast.jsx';
+import FeastBot from './components/FeastBot/FeastBot.jsx';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -40,6 +41,7 @@ const App = () => {
         </div>
       </div>
       <Footer />
+      <FeastBot />
     </ToastProvider>
   );
 };

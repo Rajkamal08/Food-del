@@ -1,16 +1,15 @@
 import React, { useContext, useMemo, useState } from 'react';
 import { StoreContext } from '../../context/StoreContext.jsx';
-import FoodItem from '../Navbar/FoodItem/FoodItem.jsx';
+import { useToast } from '../Toast/Toast.jsx';
 import './AIRecommender.css';
-
-/**
- * 🤖 AI FOOD RECOMMENDER
- * Client-side recommendation engine:
- * 1. Finds categories in user's cart
- * 2. Recommends items from same + complementary categories
- * 3. Scores by category match + price proximity + not already in cart
- * No external API needed — works entirely from existing food_list data.
- */
+import { 
+  Sparkles, 
+  Activity, 
+  ShieldCheck, 
+  ShoppingBag, 
+  Plus, 
+  AlertCircle 
+} from 'lucide-react';
 
 const COMPLEMENTS = {
     Salad:      ['Sandwich', 'Pure Veg', 'Rolls'],
@@ -25,84 +24,171 @@ const COMPLEMENTS = {
 
 const AIRecommender = () => {
     const { food_list, cartItems, addToCart, url } = useContext(StoreContext);
-    const [dismissed, setDismissed] = useState(false);
+    const showToast = useToast();
 
-    const recommendations = useMemo(() => {
-        if (!food_list.length) return [];
+    // Get cart items list
+    const cartItemsList = useMemo(() => {
+        return food_list.filter(f => (cartItems[f.id] || cartItems[f._id] || 0) > 0);
+    }, [food_list, cartItems]);
 
-        // Items in cart
-        const cartIds = Object.entries(cartItems)
-            .filter(([, qty]) => qty > 0)
-            .map(([id]) => id);
+    // Calculate Nutritional Balance Score (0 - 100)
+    const cartAnalysis = useMemo(() => {
+        if (cartItemsList.length === 0) return { score: 0, label: 'Empty Cart', tips: 'Add items to your cart to activate AI Nutrition Analysis!' };
+        
+        let vegCount = 0;
+        let sweetCount = 0;
+        let carbCount = 0;
 
-        if (cartIds.length === 0) return [];
+        cartItemsList.forEach(item => {
+            const cat = item.category || '';
+            const qty = cartItems[item.id] || cartItems[item._id] || 1;
+            if (['Salad', 'Pure Veg'].includes(cat)) vegCount += qty;
+            if (['Deserts', 'Cake'].includes(cat)) sweetCount += qty;
+            if (['Pasta', 'Noodles', 'Sandwich', 'Rolls'].includes(cat)) carbCount += qty;
+        });
 
-        // Cart categories + avg price
-        const cartItems_ = food_list.filter(f => cartIds.includes(String(f.id || f._id)));
-        const cartCategories = [...new Set(cartItems_.map(f => f.category))];
-        const avgPrice = cartItems_.reduce((s, f) => s + f.price, 0) / cartItems_.length;
+        let score = 50; // Base score
+        score += vegCount * 15;
+        score -= sweetCount * 10;
+        
+        if (carbCount > 0 && vegCount === 0) score -= 15; // Heavy carbs without greens penalty
+        if (carbCount > 0 && vegCount > 0) score += 10; // Balanced carbs and greens bonus
 
-        // Target categories (cart + complements)
+        score = Math.max(10, Math.min(100, score));
+
+        let label = 'Balanced Meal';
+        let color = '#f59e0b';
+        let tips = '';
+
+        if (score >= 80) {
+            label = 'Excellent Nutrient Balance! 🥗';
+            color = '#22c55e';
+            tips = 'Perfect choice! Your cart contains a balanced mix of dietary fibers, vitamins, and energy.';
+        } else if (score >= 50) {
+            label = 'Good Nutritional Mix';
+            color = '#f59e0b';
+            tips = 'Consider adding a fresh Salad or organic green dish to balance the carbs and improve digestion.';
+        } else {
+            label = 'Sugary / Carb Heavy ⚠️';
+            color = '#ef4444';
+            tips = 'Your cart is high in sugars or refined carbs. We highly recommend pairing this with a protein salad!';
+        }
+
+        return { score, label, color, tips };
+    }, [cartItemsList, cartItems]);
+
+    // Generate smart pairing recommendations
+    const pairings = useMemo(() => {
+        if (!food_list.length || cartItemsList.length === 0) return [];
+
+        const cartIds = cartItemsList.map(f => String(f.id || f._id));
+        const cartCategories = [...new Set(cartItemsList.map(f => f.category))];
+        const avgPrice = cartItemsList.reduce((s, f) => s + f.price, 0) / cartItemsList.length;
+
         const targetCategories = new Set([
-            ...cartCategories,
             ...cartCategories.flatMap(c => COMPLEMENTS[c] || []),
         ]);
 
-        // Score each non-cart item
-        const scored = food_list
+        return food_list
             .filter(f => !cartIds.includes(String(f.id || f._id)))
             .map(f => {
                 let score = 0;
-                if (cartCategories.includes(f.category)) score += 3;
-                else if (targetCategories.has(f.category)) score += 1;
-                // Price proximity bonus
+                if (targetCategories.has(f.category)) score += 4;
                 const priceDiff = Math.abs(f.price - avgPrice);
-                if (priceDiff < 5) score += 2;
-                else if (priceDiff < 10) score += 1;
+                if (priceDiff < 8) score += 2;
                 return { ...f, score };
             })
             .filter(f => f.score > 0)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 4);
+            .slice(0, 3);
+    }, [food_list, cartItemsList]);
 
-        return scored;
-    }, [food_list, cartItems]);
-
-    if (dismissed || recommendations.length === 0) return null;
+    const handleAddPairing = (item) => {
+        addToCart(item.id || item._id);
+        showToast(`Added pairing: ${item.name}!`, "success");
+    };
 
     return (
         <div className='ai-rec'>
-            <div className='ai-rec__header'>
-                <div className='ai-rec__title-row'>
-                    <div className='ai-rec__ai-badge'>
-                        <span>🤖</span> AI
+            <div className='ai-rec__container'>
+                {/* Left: Nutritional analysis score card */}
+                <div className='ai-rec__analysis-card'>
+                    <div className='ai-rec__badge-row'>
+                        <span className='ai-rec__ai-tag'>
+                            <Sparkles size={12} fill="currentColor" />
+                            <span>AI Nutrition Coach</span>
+                        </span>
+                        {cartItemsList.length > 0 && (
+                            <span className='ai-rec__score-label' style={{ color: cartAnalysis.color }}>
+                                {cartAnalysis.label}
+                            </span>
+                        )}
                     </div>
-                    <div>
-                        <h3 className='ai-rec__title'>Recommended For You</h3>
-                        <p className='ai-rec__subtitle'>Based on your cart — you might love these</p>
-                    </div>
-                </div>
-                <button
-                    className='ai-rec__dismiss'
-                    onClick={() => setDismissed(true)}
-                    aria-label='Dismiss recommendations'
-                >
-                    ×
-                </button>
-            </div>
 
-            <div className='ai-rec__grid'>
-                {recommendations.map((item, idx) => (
-                    <FoodItem
-                        key={item.id || item._id || idx}
-                        id={item.id || item._id}
-                        name={item.name}
-                        description={item.description}
-                        price={item.price}
-                        image={item.image}
-                        category={item.category}
-                    />
-                ))}
+                    {cartItemsList.length === 0 ? (
+                        <div className='ai-rec__empty-analysis'>
+                            <Activity size={32} className='ai-rec__activity-icon' />
+                            <h3>Cart Analysis Inactive</h3>
+                            <p>Add items to your cart to analyze calorie mix, nutrient balance scores, and tailored pairings.</p>
+                        </div>
+                    ) : (
+                        <div className='ai-rec__active-analysis'>
+                            <div className='ai-rec__metric-row'>
+                                <span className='metric-title'>Meal Balance Index</span>
+                                <span className='metric-value' style={{ color: cartAnalysis.color }}>{cartAnalysis.score}%</span>
+                            </div>
+                            <div className='ai-rec__bar-bg'>
+                                <div 
+                                    className='ai-rec__bar-fill' 
+                                    style={{ width: `${cartAnalysis.score}%`, backgroundColor: cartAnalysis.color }} 
+                                />
+                            </div>
+                            <div className='ai-rec__tip-row'>
+                                <ShieldCheck size={14} className='tip-icon' />
+                                <p className='tip-text'>{cartAnalysis.tips}</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Right: Complementary Chef Pairings */}
+                <div className='ai-rec__pairings-panel'>
+                    <h3 className='ai-rec__pairings-title'>
+                        <ShoppingBag size={14} />
+                        <span>Recommended Smart Pairings</span>
+                    </h3>
+
+                    {cartItemsList.length === 0 ? (
+                        <p className='pairings-empty-text'>Suggested pairings will appear here once you add items to the cart.</p>
+                    ) : pairings.length === 0 ? (
+                        <p className='pairings-empty-text'>No matching pairings found for your current selection.</p>
+                    ) : (
+                        <div className='ai-rec__pairings-list'>
+                            {pairings.map((item, idx) => {
+                                const imgSrc = item.image && item.image.startsWith('http')
+                                    ? item.image
+                                    : `${url}/images/${item.image}`;
+                                return (
+                                    <div key={item.id || item._id || idx} className='ai-rec__pairing-item'>
+                                        <img src={imgSrc} alt={item.name} className='pairing-img' />
+                                        <div className='pairing-info'>
+                                            <h4 className='pairing-name'>{item.name}</h4>
+                                            <span className='pairing-price'>₹{item.price}</span>
+                                        </div>
+                                        <button 
+                                            onClick={() => handleAddPairing(item)}
+                                            className='pairing-add-btn'
+                                            title='Quick add'
+                                        >
+                                            <Plus size={13} />
+                                            <span>Add</span>
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
