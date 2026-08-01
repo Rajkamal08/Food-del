@@ -84,17 +84,7 @@ const Navbar = ({ setShowLogin }) => {
                         <ChevronDown size={12} className='navbar__location-arrow' />
                     </div>
 
-                    {/* Search Bar Input */}
-                    <div className='navbar__search'>
-                        <Search size={16} className='navbar__search-icon' />
-                        <input
-                            type='text'
-                            placeholder='Search dishes...'
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            aria-label='Search food'
-                        />
-                    </div>
+
 
                     {/* Desktop nav links */}
                     <ul className='navbar__links'>

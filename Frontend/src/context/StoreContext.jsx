@@ -69,14 +69,53 @@ const StoreContextProvider = (props) => {
         return totalAmount;
     };
 
-    // ✅ Fetch Food List (with safe ID mapping)
+    // ✅ Fetch Food List (with premium Unsplash image mapping and safe ID mapping)
     const fetchFoodList = async () => {
+        const premiumFoodPhotos = [
+            "photo-1546069901-ba9599a7e63c", "photo-1565299624946-b28f40a0ae38", 
+            "photo-1565958011703-44f9829ba187", "photo-1482049016688-2d3e1b311543", 
+            "photo-1484723091739-30a097e8f929", "photo-1498837167922-ddd27525d352", 
+            "photo-1467003909585-2f8a72700288", "photo-1476224203421-9ac39bcb3327", 
+            "photo-1490645935967-10de6ba17061", "photo-1504674900247-0877df9cc836", 
+            "photo-1512621776951-a57141f2eefd", "photo-1513104890138-7c749659a591", 
+            "photo-1528279027-68f0d7fce9f1", "photo-1473093295043-cdd812d0e601", 
+            "photo-1540189549336-e6e99c3679fe", "photo-1555939594-58d7cb561ad1", 
+            "photo-1567620905732-2d1ec7ab7445", "photo-1460306855393-0410f61241c7", 
+            "photo-1544025162-d76694265947", "photo-1493770308161-fd81a649fbb2", 
+            "photo-1534422298391-e4f8c172dddb", "photo-1551183053-bf91a1d81141", 
+            "photo-1532636875364-159e6973c3b5", "photo-1560684352-8497838a2229", 
+            "photo-1506084868230-bb9d95c24759", "photo-1511690656952-34342bb7c2f2", 
+            "photo-1455619452474-d2be8b1e70cd", "photo-1504754524776-8f4f37790ca0", 
+            "photo-1563379091339-03b21ab4a4f8", "photo-1589301760014-d929f3979dbc", 
+            "photo-1543339308-43e59d6b73a6", "photo-1533089860892-a7c6f0a88666", 
+            "photo-1519708227418-c8fd9a32b7a2", "photo-1551818255-e6e10975bc17", 
+            "photo-1541832676-9b763b0239ab", "photo-1550547660-d9450f859349", 
+            "photo-1515003848601-20a5ab7f1b23", "photo-1529042410759-befb1204b468", 
+            "photo-1574484284002-952d92456975", "photo-1594212699903-ec8a3eca50f5", 
+            "photo-1585238342024-78d387f4a707", "photo-1559925393-8be0ec4767c8", 
+            "photo-1606787366850-de6330128bfc", "photo-1608897013039-887f21d8c804", 
+            "photo-1578985545062-69928b1d9587", "photo-1536304997881-a372c179924b", 
+            "photo-1463183547434-a581660f624c", "photo-1589302168068-9646b4f93c21", 
+            "photo-1551024601-bec78aea704b", "photo-1604382354936-07c5d9983bd3", 
+            "photo-1508737027454-e6454ef45afd", "photo-1505253716362-afaea1d3d1af", 
+            "photo-1618219908412-a29a1bb7b86e", "photo-1626082927389-6cd097cdc6ec", 
+            "photo-1624462966581-bc6d768cbce5", "photo-1625813506062-0aeb1d7a094b", 
+            "photo-1541014741259-df5290bc0087", "photo-1534080391025-0979e8304b2b", 
+            "photo-1563729784474-d77dbb933a9e", "photo-1588195538326-c5b1e9f80a1b", 
+            "photo-1612203987029-7f72421773f3", "photo-1600891964599-f61ba0e24092", 
+            "photo-1598214886806-c87b84b7078b", "photo-1550617931-e17a7b70dce2", 
+            "photo-1579372786545-d24232daf58c", "photo-1586528116311-ad8dd3c8310d"
+        ];
         try {
             const response = await axios.get(url + "/api/food/list");
-            const mappedData = response.data.data.map((item, index) => ({
-                ...item,
-                id: item.id || item._id || `${item.name}-${index}` || index, // Add fallback index
-            }));
+            const mappedData = response.data.data.map((item, index) => {
+                const photoId = premiumFoodPhotos[index % premiumFoodPhotos.length];
+                return {
+                    ...item,
+                    image: `https://images.unsplash.com/${photoId}?w=600&auto=format&fit=crop&q=80`,
+                    id: item.id || item._id || `${item.name}-${index}` || index,
+                };
+            });
 
             setFoodList(mappedData);
         } catch (error) {
