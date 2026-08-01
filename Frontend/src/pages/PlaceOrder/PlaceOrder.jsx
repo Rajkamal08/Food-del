@@ -24,6 +24,12 @@ const PlaceOrder = () => {
 
     const [driverTip, setDriverTip] = useState(0); // 0, 20, 30, 50
     const [submitting, setSubmitting] = useState(false);
+    
+    // Address Book states
+    const [savedAddresses, setSavedAddresses] = useState([]);
+    const [saveNewAddress, setSaveNewAddress] = useState(false);
+    const [addressTag, setAddressTag] = useState("Home");
+
     const [data, setData] = useState({
         firstName: "",
         lastName: "",
@@ -64,7 +70,6 @@ const PlaceOrder = () => {
     const handleSubmitOrder = async (event) => {
         event.preventDefault();
         
-        // Strict input validation checks
         if (data.phone.length < 10) {
             showToast("Please enter a valid 10-digit phone number.", "warning");
             return;
@@ -75,6 +80,20 @@ const PlaceOrder = () => {
         }
 
         setSubmitting(true);
+
+        // Optionally save this new address to the address book
+        if (saveNewAddress) {
+            try {
+                await axios.post(
+                    url + "/api/user/address/add", 
+                    { addressData: { ...data, tag: addressTag } }, 
+                    { headers: { token } }
+                );
+                showToast("Address saved to your address book!", "success");
+            } catch (err) {
+                console.error("Failed to save address", err);
+            }
+        }
 
         const orderData = {
             address: data,
@@ -107,6 +126,23 @@ const PlaceOrder = () => {
         }
     };
 
+    // Fetch saved addresses
+    useEffect(() => {
+        const fetchAddresses = async () => {
+            if (token) {
+                try {
+                    const response = await axios.get(url + "/api/user/address/list", { headers: { token } });
+                    if (response.data.success) {
+                        setSavedAddresses(response.data.data);
+                    }
+                } catch (error) {
+                    console.error("Could not fetch addresses", error);
+                }
+            }
+        };
+        fetchAddresses();
+    }, [token, url]);
+
     // Safeguard: Redirect if cart is empty or not logged in
     useEffect(() => {
         if (!token || subtotal === 0) {
@@ -114,6 +150,22 @@ const PlaceOrder = () => {
             navigate('/cart');
         }
     }, [token, subtotal, navigate]);
+
+    // Helper to auto-fill address form
+    const selectSavedAddress = (addr) => {
+        setData({
+            firstName: addr.firstName || data.firstName,
+            lastName: addr.lastName || data.lastName,
+            email: addr.email || data.email,
+            street: addr.street || "",
+            city: addr.city || "",
+            state: addr.state || "",
+            zipcode: addr.zipcode || "",
+            country: addr.country || "",
+            phone: addr.phone || ""
+        });
+        showToast(`Auto-filled address from ${addr.tag}`, "success");
+    };
 
     return (
         <form onSubmit={handleSubmitOrder} className='place-order'>
@@ -182,6 +234,33 @@ const PlaceOrder = () => {
                             <MapPin size={16} />
                             <span>Delivery Address</span>
                         </div>
+
+                        {/* Address Book Widget */}
+                        {savedAddresses.length > 0 && (
+                            <div className="place-order__address-book">
+                                <p className="place-order__address-book-label">Select a saved address:</p>
+                                <div className="place-order__address-cards">
+                                    {savedAddresses.map((addr, idx) => (
+                                        <button 
+                                            key={idx} 
+                                            type="button"
+                                            className="place-order__saved-card"
+                                            onClick={() => selectSavedAddress(addr)}
+                                        >
+                                            <div className="saved-card-header">
+                                                <MapPin size={12} />
+                                                <strong>{addr.tag}</strong>
+                                            </div>
+                                            <div className="saved-card-body">
+                                                <p>{addr.street}</p>
+                                                <p>{addr.city}, {addr.zipcode}</p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <input 
                             name="street" 
                             onChange={onChangeHandler} 
@@ -226,6 +305,28 @@ const PlaceOrder = () => {
                                 placeholder='Country' 
                                 required 
                             />
+                        </div>
+                        
+                        {/* Save Address Toggle */}
+                        <div className="place-order__save-address">
+                            <label className="save-address-label">
+                                <input 
+                                    type="checkbox" 
+                                    checked={saveNewAddress}
+                                    onChange={(e) => setSaveNewAddress(e.target.checked)}
+                                />
+                                Save this address for next time
+                            </label>
+                            {saveNewAddress && (
+                                <input 
+                                    type="text" 
+                                    className="save-address-tag-input"
+                                    placeholder="e.g. Home, Office, Girlfriend's House"
+                                    value={addressTag}
+                                    onChange={(e) => setAddressTag(e.target.value)}
+                                    required
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

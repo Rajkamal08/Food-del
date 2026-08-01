@@ -124,6 +124,103 @@
   padding-left: 38px;
 }
 
+/* ADDRESS BOOK WIDGET */
+.place-order__address-book {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.place-order__address-book-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.place-order__address-cards {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.place-order__address-cards::-webkit-scrollbar {
+  height: 4px;
+}
+.place-order__address-cards::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 99px;
+}
+.place-order__saved-card {
+  min-width: 200px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  padding: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition-fast);
+  font-family: inherit;
+}
+.place-order__saved-card:hover {
+  border-color: var(--primary);
+  background: rgba(255,107,53,0.03);
+}
+.saved-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.saved-card-body p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* SAVE ADDRESS TOGGLE */
+.place-order__save-address {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: var(--radius-input);
+}
+.save-address-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+}
+.save-address-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+.save-address-tag-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  font-family: inherit;
+  transition: var(--transition-fast);
+}
+.save-address-tag-input:focus {
+  border-color: var(--primary);
+}
+
 /* RIGHT COLUMN SUMMARY PANEL */
 .place-order__right {
   display: flex;

@@ -67,4 +67,40 @@ const registerUser = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser };
+// Add address to user's address book
+const addAddress = async (req, res) => {
+  try {
+    const { addressData } = req.body;
+    const userId = req.body.userId; // injected by authMiddleware
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    user.addressBook.push(addressData);
+    await user.save();
+    
+    res.json({ success: true, message: "Address saved!", data: user.addressBook });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: "Error saving address" });
+  }
+};
+
+// Get user's address book
+const getAddresses = async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+    res.json({ success: true, data: user.addressBook });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: "Error fetching addresses" });
+  }
+};
+
+export { loginUser, registerUser, addAddress, getAddresses };

@@ -238,15 +238,38 @@
   transition: var(--transition-fast);
 }
 
-/* Active Step timeline styling */
-.my-orders__step.active .my-orders__step-dot {
+/* Completed Step timeline styling */
+.my-orders__step.completed .my-orders__step-dot {
   background: var(--primary);
   border-color: var(--primary);
   color: #ffffff;
-  box-shadow: var(--shadow-glow);
 }
-.my-orders__step.active .my-orders__step-label {
+.my-orders__step.completed .my-orders__step-label {
   color: var(--primary);
+}
+
+/* Current Step timeline styling */
+.my-orders__step.current .my-orders__step-dot {
+  background: rgba(255, 107, 53, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
+}
+.my-orders__step.current .my-orders__step-label {
+  color: var(--primary);
+  font-weight: 800;
+}
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--primary);
+  border-radius: 50%;
+  animation: pulseNode 1.5s infinite;
+}
+
+@keyframes pulseNode {
+  0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.5); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(255, 107, 53, 0); }
+  100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
 }
 
 .my-orders__step-line {

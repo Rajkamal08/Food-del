@@ -163,19 +163,23 @@ const MyOrders = () => {
 
                                 {/* Progress timeline */}
                                 <div className='my-orders__timeline'>
-                                    {STATUS_STEPS.map((step, i) => (
-                                        <React.Fragment key={step}>
-                                            <div className={`my-orders__step ${i <= st.step ? 'active' : ''}`}>
-                                                <div className='my-orders__step-dot'>
-                                                    {i <= st.step ? '✓' : i + 1}
+                                    {STATUS_STEPS.map((step, i) => {
+                                        const isCompleted = i < st.step;
+                                        const isCurrent = i === st.step;
+                                        return (
+                                            <React.Fragment key={step}>
+                                                <div className={`my-orders__step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}>
+                                                    <div className='my-orders__step-dot'>
+                                                        {isCompleted ? '✓' : (isCurrent ? <span className="pulse-dot"></span> : i + 1)}
+                                                    </div>
+                                                    <span className='my-orders__step-label'>{step}</span>
                                                 </div>
-                                                <span className='my-orders__step-label'>{step}</span>
-                                            </div>
-                                            {i < STATUS_STEPS.length - 1 && (
-                                                <div className={`my-orders__step-line ${i < st.step ? 'active' : ''}`} />
-                                            )}
-                                        </React.Fragment>
-                                    ))}
+                                                {i < STATUS_STEPS.length - 1 && (
+                                                    <div className={`my-orders__step-line ${i < st.step ? 'active' : ''}`} />
+                                                )}
+                                            </React.Fragment>
+                                        );
+                                    })}
                                 </div>
 
                                 {/* Actions footer */}

@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
       type: Object,
       default: {},
     },
+    addressBook: {
+      type: Array,
+      default: [],
+    },
     role: {
       type: String,
       enum: ['Customer', 'Admin'],
