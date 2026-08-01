@@ -7,6 +7,7 @@ import {
 import multer from "multer";
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import adminAuth from "../middleware/adminAuth.js";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -26,8 +27,8 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage: storage });
 const foodRouter = express.Router();
-foodRouter.post("/add", upload.single("image"), addFood);
+foodRouter.post("/add", adminAuth, upload.single("image"), addFood);
 foodRouter.get("/list", listFood);
-foodRouter.post("/remove", removeFood);
+foodRouter.post("/remove", adminAuth, removeFood);
 
 export default foodRouter;
