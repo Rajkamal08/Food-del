@@ -135,12 +135,7 @@ const Navbar = ({ setShowLogin }) => {
                         </span>
                     </Link>
 
-                    {/* Location Selector */}
-                    <div className='navbar__location' title='Select Location' onClick={() => showToast("📍 Deliveries configured for Bangalore, Koramangala area.", "info")}>
-                        <MapPin size={16} className='navbar__location-pin' />
-                        <span className='navbar__location-name'>Bangalore, Koramangala</span>
-                        <ChevronDown size={12} className='navbar__location-arrow' />
-                    </div>
+
 
                     {/* Desktop nav links */}
                     <ul className='navbar__links'>

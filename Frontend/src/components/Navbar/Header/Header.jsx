@@ -38,13 +38,7 @@ const Header = () => {
   return (
     <div className='header'>
       <div className='header__container container'>
-        {/* Left Content */}
         <div className='header__left'>
-          <div className='header__badge'>
-            <MapPin size={12} className='header__badge-icon' />
-            <span>Bangalore, Koramangala</span>
-          </div>
-          
           <h1 className='header__title'>
             Good Food.<br />
             <span className='header__title-highlight'>Delivered Fast.</span>
