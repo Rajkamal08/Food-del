@@ -53,7 +53,7 @@ Featuring an authentic Indian menu of 200+ dishes, AI-driven recommendations, an
 ```text
 FeastFlow/
 │
-├── frontend/        # React.js Customer-facing Web App
+├── Frontend/        # React.js Customer-facing Web App
 ├── backend/         # Node.js API, MongoDB Schemas, & Seeding Scripts
 ├── admin/           # React.js Admin Dashboard (RBAC Secured)
 └── README.md        # Documentation
